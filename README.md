@@ -138,6 +138,23 @@ Notes:
 - Use a unique user-level name such as `esaCopilotGlobal` to avoid conflicts with workspace server names.
 - Keep `.vscode/mcp.json` for repository-local usage and use the global server when working outside this repository.
 
+#### Using from another workspace (npm behavior)
+
+When your terminal is in a different directory (for example `C:/SimWorldServer`), `npm install` fails with `ENOENT` if that directory has no `package.json`. This is expected and not an MCP error.
+
+Recommended setup:
+
+1. Install and build this repository once (or when dependencies/source change).
+
+```powershell
+npm --prefix $env:ESA_MCP_ROOT install
+npm --prefix $env:ESA_MCP_ROOT run build
+```
+
+2. Start `esaCopilotGlobal` from `MCP: List Servers` in any workspace.
+
+You do **not** need to run `npm install` in every workspace. Only the repository pointed to by `ESA_MCP_ROOT` needs dependencies and build artifacts.
+
 ### Configure Copilot instruction files (global and workspace)
 
 Use this when you want Copilot to apply your esa workflow rules consistently.
@@ -449,6 +466,23 @@ PowerShell（ユーザー環境変数）:
 
 - User 側サーバー名は `esaCopilotGlobal` のように一意名を推奨します（ワークスペース側 `esaCopilot` と重複回避）。
 - 設定後は VS Code を再起動し、`MCP: List Servers` から `esaCopilotGlobal` を起動してください。
+
+#### 別ワークスペースで使うときの注意（npm の挙動）
+
+ターミナルの現在地が別ディレクトリ（例: `C:/SimWorldServer`）だと、そこに `package.json` が無いため `npm install` は `ENOENT` で失敗します。これは想定どおりで、MCP 設定エラーではありません。
+
+推奨手順:
+
+1. `ESA_MCP_ROOT` が指すリポジトリに対して一度だけ依存関係インストールとビルドを行う（依存関係やソース変更時に再実行）。
+
+```powershell
+npm --prefix $env:ESA_MCP_ROOT install
+npm --prefix $env:ESA_MCP_ROOT run build
+```
+
+2. その後はどのワークスペースでも `MCP: List Servers` から `esaCopilotGlobal` を起動する。
+
+つまり、`npm install` を各ワークスペースで実行する必要はありません。`ESA_MCP_ROOT` 側のリポジトリだけ準備されていれば動作します。
 
 ### D. Copilot 向け instructions ファイル設定（全ワークスペース共通・詳細）
 
