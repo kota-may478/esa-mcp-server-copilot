@@ -196,6 +196,7 @@ Copy-Item .env.example .env.local
 ```
 
 `.env.local` をエディターで開き、認証情報を入力します。
+
 - `ESA_ACCESS_TOKEN`: 取得した esa の Personal Access Token
 - `ESA_TEAM_NAME`: esa のチーム名 (`xxx.esa.io` の `xxx` の部分)
 
@@ -210,13 +211,15 @@ npm run build
 #### Step 5: GitHub Copilot への接続
 
 **方法 A: このワークスペースのみで使う場合（テストに推奨）**
+
 1. このフォルダを VS Code で開きます。
 2. 同梱されている `.vscode/mcp.json` により、サーバーが自動的に認識されます。
 3. コマンドパレット (`Ctrl+Shift+P` または `Cmd+Shift+P`) を開き、`MCP: List Servers` と入力して実行します。
 4. 一覧から `esaCopilot` を探し、**Start** をクリックします。
 
 **方法 B: グローバル設定（どのワークスペースからでも使う場合）**
-1. このコードを配置した絶対パスをメモします（例: `C:/absolute/path/to/esa-mcp-server-copilot`）。
+
+1. このレポジトリまでの絶対パスをメモします（例: `C:/absolute/path/to/esa-mcp-server-copilot`）。
 2. コマンドパレットから `MCP: Open User Configuration` を実行します。
 3. `servers` に以下の設定を追記します（パスはご自身の環境に合わせて変更してください）。
 
