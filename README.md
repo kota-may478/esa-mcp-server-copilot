@@ -133,6 +133,27 @@ PowerShell (user environment variable):
 
 3. Restart VS Code and start `esaCopilotGlobal` from `MCP: List Servers`.
 
+If startup fails with an error like `Failed to read envFile '/.env.local'` (or `C:\.env.local`), `ESA_MCP_ROOT` is not visible to the current VS Code process.
+
+- Fully quit VS Code, reopen it, and start `esaCopilotGlobal` again.
+- Or avoid env-variable expansion and use absolute paths directly in User Configuration:
+
+```json
+{
+  "servers": {
+    "esaCopilotGlobal": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "C:/absolute/path/to/esa-mcp-server-copilot/dist/stdio.js"
+      ],
+      "cwd": "C:/absolute/path/to/esa-mcp-server-copilot",
+      "envFile": "C:/absolute/path/to/esa-mcp-server-copilot/.env.local"
+    }
+  }
+}
+```
+
 Notes:
 
 - Use a unique user-level name such as `esaCopilotGlobal` to avoid conflicts with workspace server names.
@@ -466,6 +487,27 @@ PowerShell（ユーザー環境変数）:
 
 - User 側サーバー名は `esaCopilotGlobal` のように一意名を推奨します（ワークスペース側 `esaCopilot` と重複回避）。
 - 設定後は VS Code を再起動し、`MCP: List Servers` から `esaCopilotGlobal` を起動してください。
+
+起動時に `Failed to read envFile '/.env.local'`（または `C:\.env.local`）が出る場合は、現在の VS Code プロセスから `ESA_MCP_ROOT` が見えていません。
+
+- VS Code を完全終了して再起動し、再度 `esaCopilotGlobal` を起動してください。
+- もしくは User Configuration 側を環境変数展開なしの絶対パス指定に変更してください:
+
+```json
+{
+  "servers": {
+    "esaCopilotGlobal": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "C:/absolute/path/to/esa-mcp-server-copilot/dist/stdio.js"
+      ],
+      "cwd": "C:/absolute/path/to/esa-mcp-server-copilot",
+      "envFile": "C:/absolute/path/to/esa-mcp-server-copilot/.env.local"
+    }
+  }
+}
+```
 
 #### 別ワークスペースで使うときの注意（npm の挙動）
 
