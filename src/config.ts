@@ -1,4 +1,6 @@
-import "dotenv/config";
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
+import { config as loadDotenv } from "dotenv";
 import { z } from "zod";
 
 const levelSchema = z.enum(["trace", "debug", "info", "warn", "error", "fatal"]);
@@ -27,6 +29,19 @@ export type AppConfig = {
   mcpHttpPort: number;
   mcpAuthToken?: string;
 };
+
+function loadEnvFiles(): void {
+  // Prefer .env.local and use .env as a fallback for missing keys.
+  const candidates = [".env.local", ".env"];
+  for (const fileName of candidates) {
+    const fullPath = resolve(process.cwd(), fileName);
+    if (existsSync(fullPath)) {
+      loadDotenv({ path: fullPath, quiet: true });
+    }
+  }
+}
+
+loadEnvFiles();
 
 function readProcessEnv() {
   return {
