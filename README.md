@@ -41,8 +41,10 @@ It provides safe, validated tools for post creation, updates, listing, fetching,
 
 ### Environment variables
 
-Copy `.env.example` to `.env` and fill in values.
-The server loads `.env` automatically at startup (via `dotenv`), so manual `export` is not required when using npm scripts.
+Copy `.env.example` to `.env.local` and fill in values.
+The server loads `.env.local` first and then `.env` as a fallback at startup (via `dotenv`), so manual `export` is not required when using npm scripts.
+
+If you already have an existing `.env`, you can keep using it temporarily (fallback is enabled), but `.env.local` is the recommended file going forward.
 
 | Name | Required | Default | Description |
 |---|---|---|---|
@@ -66,16 +68,16 @@ npm install
 2. Create environment file
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
 PowerShell:
 
 ```powershell
-Copy-Item .env.example .env
+Copy-Item .env.example .env.local
 ```
 
-3. Edit `.env` and set `ESA_ACCESS_TOKEN`, `ESA_TEAM_NAME`
+3. Edit `.env.local` and set `ESA_ACCESS_TOKEN`, `ESA_TEAM_NAME`
 4. Build
 
 ```bash
@@ -122,10 +124,10 @@ cd <YOUR_REPO>
 npm install
 ```
 
-3. Create `.env` from template and set values
+3. Create `.env.local` from template and set values
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
 4. Build and run
@@ -215,8 +217,10 @@ esa-mcp-server-copilot/
 
 ## 環境変数
 
-`.env.example` を ` .env` としてコピーして利用します。
-このサーバーは起動時に `dotenv` で `.env` を自動読み込みするため、npm scripts を使う場合は手動で `export` する必要はありません。
+`.env.example` を `.env.local` としてコピーして利用します。
+このサーバーは起動時に `dotenv` で `.env.local` を優先し、未設定キーのみ `.env` をフォールバック読み込みするため、npm scripts を使う場合は手動で `export` する必要はありません。
+
+既存の `.env` がある場合も当面はフォールバックで動作しますが、今後の推奨運用は `.env.local` です。
 
 | 変数名 | 必須 | デフォルト | 説明 |
 |---|---|---|---|
@@ -240,16 +244,16 @@ npm install
 2. 環境変数ファイルを作成
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
 Windows PowerShell の場合:
 
 ```powershell
-Copy-Item .env.example .env
+Copy-Item .env.example .env.local
 ```
 
-3. `.env` を編集して `ESA_ACCESS_TOKEN` と `ESA_TEAM_NAME` を設定
+3. `.env.local` を編集して `ESA_ACCESS_TOKEN` と `ESA_TEAM_NAME` を設定
 
 4. ビルド
 
@@ -275,7 +279,7 @@ npm run start
 
 ### 2) HTTP モード（必要時）
 
-`.env` に `MCP_AUTH_TOKEN` を設定してください。
+`.env.local` に `MCP_AUTH_TOKEN` を設定してください。
 
 開発起動:
 
@@ -318,19 +322,6 @@ VS Code でこのフォルダをワークスペースとして開き、以下を
 
 ```json
 {
-  "inputs": [
-    {
-      "type": "promptString",
-      "id": "esa-access-token",
-      "description": "esa Personal Access Token",
-      "password": true
-    },
-    {
-      "type": "promptString",
-      "id": "esa-team-name",
-      "description": "esa team name"
-    }
-  ],
   "servers": {
     "esaCopilot": {
       "type": "stdio",
@@ -339,12 +330,7 @@ VS Code でこのフォルダをワークスペースとして開き、以下を
         "C:/absolute/path/to/esa-mcp-server-copilot/dist/stdio.js"
       ],
       "cwd": "C:/absolute/path/to/esa-mcp-server-copilot",
-      "env": {
-        "ESA_ACCESS_TOKEN": "${input:esa-access-token}",
-        "ESA_TEAM_NAME": "${input:esa-team-name}",
-        "LOG_LEVEL": "info"
-      },
-      "envFile": "C:/absolute/path/to/esa-mcp-server-copilot/.env"
+      "envFile": "C:/absolute/path/to/esa-mcp-server-copilot/.env.local"
     }
   }
 }
@@ -405,16 +391,16 @@ cd <YOUR_REPO>
 npm install
 ```
 
-3. `.env` を作成して値を設定
+3. `.env.local` を作成して値を設定
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
 PowerShell:
 
 ```powershell
-Copy-Item .env.example .env
+Copy-Item .env.example .env.local
 ```
 
 4. ビルドして起動
@@ -439,7 +425,7 @@ npm run build
 ### サーバーが起動しない
 
 - `node -v` が 20.11.0 以上か確認
-- `.env` に `ESA_ACCESS_TOKEN` / `ESA_TEAM_NAME` があるか確認
+- `.env.local` に `ESA_ACCESS_TOKEN` / `ESA_TEAM_NAME` があるか確認
 - `npm run build` 後に `dist/stdio.js` が生成されているか確認
 
 ### ツールが表示されない
@@ -461,9 +447,9 @@ npm run build
 
 ## セキュリティ注意事項
 
-- `.env` は git 管理しない（本リポジトリは `.gitignore` 済み）
+- `.env.local` は git 管理しない（本リポジトリは `.gitignore` 済み）
 - トークンを README や `mcp.json` に平文固定しない
-- 可能なら `inputs` を使って VS Code 側に安全入力させる
+- MCP 設定は `envFile` で供給し、`env` との二重定義を避ける
 - 削除系は `confirm=true` を必須化し、誤操作を低減
 
 ## チーム運用メモ
