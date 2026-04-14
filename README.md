@@ -123,8 +123,7 @@ applyTo: "**"
 
 # ESA Workflow Rules
 - Split large read/write operations into chunks when needed.
-- Before create/update, read post #1 (README) and follow "記事作成のルール".
-- Explain naming rationale (intended English phrase, chunking, and why) in your response.
+- Before create/update, read post #1 (README) and follow the rule.
 ```
 
 Notes:
@@ -422,7 +421,6 @@ applyTo: "**"
 # ESA Workflow Rules
 - 大きな記事の読込/更新は分割して処理する。
 - 作成/更新前に post #1 README の「記事作成のルール」を参照する。
-- 命名時は英文意図・チャンク構造・採用理由を返答内で説明する。
 ```
 
 補足:
