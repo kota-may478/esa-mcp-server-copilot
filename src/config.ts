@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { z } from "zod";
 
 const levelSchema = z.enum(["trace", "debug", "info", "warn", "error", "fatal"]);

@@ -42,6 +42,7 @@ It provides safe, validated tools for post creation, updates, listing, fetching,
 ### Environment variables
 
 Copy `.env.example` to `.env` and fill in values.
+The server loads `.env` automatically at startup (via `dotenv`), so manual `export` is not required when using npm scripts.
 
 | Name | Required | Default | Description |
 |---|---|---|---|
@@ -215,6 +216,7 @@ esa-mcp-server-copilot/
 ## 環境変数
 
 `.env.example` を ` .env` としてコピーして利用します。
+このサーバーは起動時に `dotenv` で `.env` を自動読み込みするため、npm scripts を使う場合は手動で `export` する必要はありません。
 
 | 変数名 | 必須 | デフォルト | 説明 |
 |---|---|---|---|
