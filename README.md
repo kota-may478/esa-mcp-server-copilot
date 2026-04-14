@@ -101,6 +101,69 @@ Use `.vscode/mcp.json` (workspace-shared) included in this repository.
 
 You can also use user-level config via `MCP: Open User Configuration`.
 
+### Configure Copilot instruction files (global and workspace)
+
+Use this when you want Copilot to apply your esa workflow rules consistently.
+
+#### 1) User-level instructions (recommended for all workspaces)
+
+Create a user profile instructions file:
+
+- Path (Windows): `C:/Users/<YOUR_USER>/.copilot/instructions/esa-workflow.instructions.md`
+- Path (macOS/Linux): `~/.copilot/instructions/esa-workflow.instructions.md`
+
+Example:
+
+```markdown
+---
+name: ESA Workflow Global Rules
+description: Use when handling esa posts (read, list, create, update, naming, category placement).
+applyTo: "**"
+---
+
+# ESA Workflow Rules
+- Split large read/write operations into chunks when needed.
+- Before create/update, read post #1 (README) and follow "記事作成のルール".
+- Explain naming rationale (intended English phrase, chunking, and why) in your response.
+```
+
+Notes:
+
+- `applyTo: "**"` means pattern-based auto-attachment for all files.
+- If you omit `applyTo`, instructions are still discoverable by `description` matching, but not always auto-attached.
+
+#### 2) Workspace-level instructions (recommended for team sharing)
+
+Store shared project rules in one of these files:
+
+- `.github/copilot-instructions.md` (always-on for this repository)
+- `.github/instructions/*.instructions.md` (file-based or task-based rules)
+
+Use workspace-level files for team conventions that should travel with git.
+
+#### 3) How to verify applyTo and active status
+
+1. Open command palette and run `Chat: Configure Instructions & Rules` (or `Chat: Configure Instructions` on some versions).
+2. Confirm your rule (for example, `ESA Workflow Global Rules`) appears in the list.
+3. Open the file and verify frontmatter includes `applyTo: "**"`.
+4. If behavior seems stale, run `Developer: Reload Window`.
+
+Optional diagnostics:
+
+- Check chat customization diagnostics to see loaded instructions and errors.
+- Ensure these settings are enabled if you customized them:
+  - `chat.includeApplyingInstructions`
+  - `chat.instructionsFilesLocations`
+
+#### 4) Enable Settings Sync (for multiple devices)
+
+1. Click the account icon in VS Code.
+2. Select `Turn on Settings Sync`.
+3. Sign in (GitHub or Microsoft account).
+4. In sync items, enable `Prompts and Instructions`.
+
+After this, your user-level Copilot instruction files can be synchronized across devices.
+
 ### Verify tools are callable
 
 Ask Copilot:
@@ -336,7 +399,69 @@ VS Code でこのフォルダをワークスペースとして開き、以下を
 }
 ```
 
-### D. HTTP サーバーとして登録する場合
+### D. Copilot 向け instructions ファイル設定（全ワークスペース共通・詳細）
+
+esa 運用ルールをどのワークスペースでも安定して効かせるには、ユーザーレベル instructions を使います。
+
+#### 1) ユーザーレベル instructions の作成（推奨）
+
+次の場所にファイルを作成します。
+
+- Windows: `C:/Users/<YOUR_USER>/.copilot/instructions/esa-workflow.instructions.md`
+- macOS/Linux: `~/.copilot/instructions/esa-workflow.instructions.md`
+
+例:
+
+```markdown
+---
+name: ESA Workflow Global Rules
+description: Use when handling esa posts (read, list, create, update, naming, category placement).
+applyTo: "**"
+---
+
+# ESA Workflow Rules
+- 大きな記事の読込/更新は分割して処理する。
+- 作成/更新前に post #1 README の「記事作成のルール」を参照する。
+- 命名時は英文意図・チャンク構造・採用理由を返答内で説明する。
+```
+
+補足:
+
+- `applyTo: "**"` はパターン適用による自動アタッチを広く有効化します。
+- `applyTo` を省略すると、`description` 一致時には使われますが、常時自動ではありません。
+
+#### 2) ワークスペース共有 rules（チーム向け）
+
+チームで共有したい場合は、リポジトリにも置きます。
+
+- `.github/copilot-instructions.md`（このリポジトリで常時適用）
+- `.github/instructions/*.instructions.md`（ファイル種別/タスク別）
+
+ユーザー固有ルールは `~/.copilot/instructions`、チーム共通ルールは `.github/` 配下、という分離が運用しやすいです。
+
+#### 3) applyTo 設定と有効状態の確認方法
+
+1. コマンドパレットで `Chat: Configure Instructions & Rules`（環境によっては `Chat: Configure Instructions`）を実行
+2. `ESA Workflow Global Rules` が一覧に見えることを確認
+3. ファイル先頭 frontmatter に `applyTo: "**"` があることを確認
+4. 反映が不安定な場合は `Developer: Reload Window` を実行
+
+必要に応じて、Chat customization diagnostics で読み込まれた instructions とエラーを確認してください。
+また、設定を変更している場合は次が有効か確認します。
+
+- `chat.includeApplyingInstructions`
+- `chat.instructionsFilesLocations`
+
+#### 4) Settings Sync の有効化（別端末へ同期）
+
+1. VS Code 左下のアカウントアイコンをクリック
+2. `Turn on Settings Sync` を選択
+3. GitHub または Microsoft アカウントでサインイン
+4. 同期項目で `Prompts and Instructions` を有効化
+
+これでユーザーレベル instructions を複数端末で共有できます。
+
+### E. HTTP サーバーとして登録する場合
 
 `npm run start:http` でサーバーを起動したうえで、次の設定を追加します。
 
