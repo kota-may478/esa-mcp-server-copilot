@@ -1,0 +1,31 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "esa-access-token",
+      "description": "esa Personal Access Token (read/write)",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "esa-team-name",
+      "description": "esa team name (xxx in xxx.esa.io)"
+    }
+  ],
+  "servers": {
+    "esaCopilot": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/dist/stdio.js"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "ESA_ACCESS_TOKEN": "${input:esa-access-token}",
+        "ESA_TEAM_NAME": "${input:esa-team-name}",
+        "LOG_LEVEL": "info"
+      },
+      "envFile": "${workspaceFolder}/.env"
+    }
+  }
+}
