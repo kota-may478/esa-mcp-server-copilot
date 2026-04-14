@@ -101,6 +101,43 @@ Use `.vscode/mcp.json` (workspace-shared) included in this repository.
 
 You can also use user-level config via `MCP: Open User Configuration`.
 
+If you want to start this server while working in other directories/workspaces, define a global user server entry and reference this repository via an environment variable.
+
+#### Global user MCP server (works from any workspace)
+
+1. Set environment variable `ESA_MCP_ROOT` to this repository path.
+
+PowerShell (user environment variable):
+
+```powershell
+[Environment]::SetEnvironmentVariable("ESA_MCP_ROOT", "C:/absolute/path/to/esa-mcp-server-copilot", "User")
+```
+
+2. Open `MCP: Open User Configuration` and add this server.
+
+```json
+{
+  "servers": {
+    "esaCopilotGlobal": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${env:ESA_MCP_ROOT}/dist/stdio.js"
+      ],
+      "cwd": "${env:ESA_MCP_ROOT}",
+      "envFile": "${env:ESA_MCP_ROOT}/.env.local"
+    }
+  }
+}
+```
+
+3. Restart VS Code and start `esaCopilotGlobal` from `MCP: List Servers`.
+
+Notes:
+
+- Use a unique user-level name such as `esaCopilotGlobal` to avoid conflicts with workspace server names.
+- Keep `.vscode/mcp.json` for repository-local usage and use the global server when working outside this repository.
+
 ### Configure Copilot instruction files (global and workspace)
 
 Use this when you want Copilot to apply your esa workflow rules consistently.
@@ -380,23 +417,38 @@ VS Code でこのフォルダをワークスペースとして開き、以下を
 
 ### C. ユーザーレベル設定（全ワークスペース共通）
 
-コマンドパレットで `MCP: Open User Configuration` を実行し、以下を追加します。
+別のディレクトリを開いている時にも `esaCopilot` を使いたい場合は、User Configuration をグローバル用途で設定します。
+
+まず、`ESA_MCP_ROOT` にこのリポジトリの絶対パスを設定します。
+
+PowerShell（ユーザー環境変数）:
+
+```powershell
+[Environment]::SetEnvironmentVariable("ESA_MCP_ROOT", "C:/absolute/path/to/esa-mcp-server-copilot", "User")
+```
+
+その後、コマンドパレットで `MCP: Open User Configuration` を実行し、以下を追加します。
 
 ```json
 {
   "servers": {
-    "esaCopilot": {
+    "esaCopilotGlobal": {
       "type": "stdio",
       "command": "node",
       "args": [
-        "C:/absolute/path/to/esa-mcp-server-copilot/dist/stdio.js"
+        "${env:ESA_MCP_ROOT}/dist/stdio.js"
       ],
-      "cwd": "C:/absolute/path/to/esa-mcp-server-copilot",
-      "envFile": "C:/absolute/path/to/esa-mcp-server-copilot/.env.local"
+      "cwd": "${env:ESA_MCP_ROOT}",
+      "envFile": "${env:ESA_MCP_ROOT}/.env.local"
     }
   }
 }
 ```
+
+補足:
+
+- User 側サーバー名は `esaCopilotGlobal` のように一意名を推奨します（ワークスペース側 `esaCopilot` と重複回避）。
+- 設定後は VS Code を再起動し、`MCP: List Servers` から `esaCopilotGlobal` を起動してください。
 
 ### D. Copilot 向け instructions ファイル設定（全ワークスペース共通・詳細）
 
